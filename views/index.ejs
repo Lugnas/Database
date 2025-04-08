@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citat</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        ul {
+            padding-left: 10px;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        button {
+            margin-top: 20px;
+        }
+
+        a {
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .update-link {
+            display: block;
+
+            margin-top: 10px;
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Citat</h1>
+    <ul>
+        <p>Antal citat: <%= quotes.length %>
+        </p>
+
+        <% quotes.forEach(function(quote) { %>
+            <li id="quote-<%= quote.id %>">
+                <%= quote.text %> - <%= quote.author %>
+                        <p>Quote ID: <%= quote.id %>
+                        </p>
+                        <button onclick="deleteQuote(<%= quote.id %>)">Ta bort</button>
+
+                        <a href="/update/<%= quote.id %>" class="update-link">Uppdatera citatet</a>
+            </li>
+            <% }) %>
+    </ul>
+
+    <a href="/create" class="create-link">Skapa nytt citat?</a>
+
+    <script>
+
+        function deleteQuote(id) {
+            fetch(`/api/quote/${id}`, {
+                method: 'DELETE',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        document.getElementById(`quote-${id}`).remove();
+                    } else {
+                        console.error("Det gick inte att ta bort citatet.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Det gick inte att ta bort citatet:", error);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppdatera Citat</title>
+</head>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+</style>
+
+<body>
+
+    <h1>Uppdatera Citat</h1>
+    <form id="update-form">
+        <input type="hidden" id="id" value="<%= quote.id %>">
+        <label for="text">Citat:</label>
+        <input type="text" id="text" value="<%= quote.text %>" required>
+        <label for="author">Författare:</label>
+        <input type="text" id="author" value="<%= quote.author %>" required>
+        <button type="submit">Uppdatera Citat</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('update-form');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('id').value;
+            const text = document.getElementById('text').value;
+            const author = document.getElementById('author').value;
+
+            const data = { id, text, author };
+
+            const response = await fetch('/api/quote', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Citatet har uppdaterats!');
+                window.location.href = '/';
+            } else {
+                alert('Fel: ' + result.message);
+            }
+        });
+    </script>
+
+    <a href="/">Till citatlistan</a>
+</body>
+
+</html>
